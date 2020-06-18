@@ -30,11 +30,3 @@ MYSQLD_OPTIONS="--innodb_file_per_table=ON \
 
 # The root password will be set to this.
 MYSQL_ROOT_PASSWORD=supersecretpassword
-
-# The commands which should be run to setup the test DB.
-ENVIRONMENT_SETUP_COMMANDS="RAILS_ENV=test rake db:setup db:migrate && \
-                            rake parallel:create && \
-                            rake parallel:prepare"
-
-# End configuration
-###############################################################################

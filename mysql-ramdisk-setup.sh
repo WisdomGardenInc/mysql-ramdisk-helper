@@ -12,7 +12,7 @@ diskutil erasevolume HFS+ "mysql-ramdisk" `hdiutil attach -nomount ram://$RAMDIS
 echo ; echo "*** Initialising DB in ramdisk"
 $MYSQL_PATH/bin/mysqld --initialize \
                        --user mysql \
-                       --basedir=/usr/local/opt/mysql@5.5 \
+                       --basedir=/usr/local/opt/mysql@5.7 \
                        --datadir=$RAMDISK_MOUNT_POINT/mysql-ramdisk 2> /tmp/mysql-ramdisk-init.log ; cat /tmp/mysql-ramdisk-init.log
 TEMP_PW=`cat /tmp/mysql-ramdisk-init.log | sed -n 's/.*A temporary password is generated for root@localhost: \(.*\)$/\1/p'` && rm /tmp/mysql-ramdisk-init.log
 
@@ -22,7 +22,7 @@ if [[ -z TEMP_PW ]] ; then
 fi
 
 echo ; echo "*** Starting mysqld"
-$MYSQL_PATH/bin/mysqld --basedir=/usr/local/opt/mysql@5.5 \
+$MYSQL_PATH/bin/mysqld --basedir=/usr/local/opt/mysql@5.7 \
                        --datadir=$RAMDISK_MOUNT_POINT/mysql-ramdisk \
                        --user=mysql \
                        --log-error=$RAMDISK_MOUNT_POINT/mysql-ramdisk/mysql.ramdisk.err \
@@ -43,9 +43,3 @@ $MYSQL_PATH/bin/mysql -uroot \
                       --connect-expired-password \
                       -e "ALTER USER 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';"
 
-unset TEMP_PW
-
-if [[ ! -z ENVIRONMENT_SETUP_COMMANDS ]]; then
-  echo ; echo "*** Setting up environment"
-  eval $ENVIRONMENT_SETUP_COMMANDS
-fi
